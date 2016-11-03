@@ -1,2 +1,5 @@
 all:
-	javac -cp lib/* src/waifu/Anime.java src/waifu/drivers/* -d bin/
+	javac -cp lib/*.jar src/waifu/Anime.java src/waifu/drivers/* -d bin/
+	
+clean:
+	rm -r bin
