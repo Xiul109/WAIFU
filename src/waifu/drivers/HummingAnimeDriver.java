@@ -12,7 +12,7 @@ import com.jaunt.ResponseException;
 import com.jaunt.SearchException;
 import com.jaunt.UserAgent;
 
-public class HummingAnimeDriver extends AnimeDriver{
+public class HummingAnimeDriver implements AnimeDriver{
 	boolean end;
 	String nextUrl;
 	List<String> urls;
