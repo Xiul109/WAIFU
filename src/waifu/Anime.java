@@ -1,4 +1,5 @@
 package waifu;
+
 import java.util.List;
 
 public class Anime{
@@ -8,15 +9,16 @@ public class Anime{
 	private int nChapters;
 	private int duration;
 	private float score;
-	public Anime(String n, String sin, List<String> tgs, int nC, int d, float sc){
-		name=n;
-		synopsis=sin;
-		tags=tgs;
-		nChapters=nC;
-		duration=d;
-		score=sc;
-	}
 	
+	public Anime(String name, String synopsis, List<String> tags, int nChapters, int duration, float score) {
+		this.name = name;
+		this.synopsis = synopsis;
+		this.tags = tags;
+		this.nChapters = nChapters;
+		this.duration = duration;
+		this.score = score;
+	}
+
 	public String getName(){
 		return name;
 	}
@@ -38,4 +40,10 @@ public class Anime{
 	public float getScore(){
 		return score;
 	}
+	@Override
+	public String toString() {
+		return "Anime [name=" + name + ", synopsis=" + synopsis + ", tags=" + tags + ", nChapters=" + nChapters
+				+ ", duration=" + duration + ", score=" + score + "]";
+	}
 }
+
