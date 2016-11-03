@@ -63,8 +63,14 @@ public class HummingAnimeDriver implements AnimeDriver{
 				score.toString().equals("null")?-1:2.0f*score.toFloat());
 	}
 	
-	public Anime next() throws NotFound, ResponseException{
-		return end?null:getAnimeInfo(nextUrl());
+	public Anime next(){
+		try {
+			return end?null:getAnimeInfo(nextUrl());
+		} catch (NotFound e) {
+			return null;
+		} catch (ResponseException e) {
+			return null;
+		}
 	}
 	
 	public boolean hasNext(){
