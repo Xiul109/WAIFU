@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.io.IOException;
 
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.domain.FIPANames;
 import jade.domain.FIPAAgentManagement.FailureException;
 import jade.domain.FIPAAgentManagement.NotUnderstoodException;
@@ -15,7 +16,6 @@ import jade.domain.FIPAAgentManagement.RefuseException;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
-
 
 public class InformationAgent extends Agent{
 	private final String HUMMING="HummingDriver";
@@ -63,10 +63,10 @@ public class InformationAgent extends Agent{
 	class CheckQuerys extends AchieveREResponder{
 		private final int TAG_MODE=1, ANIME_MODE=2;
 		private int mode=0;
-		private String tag="";
-		private int count;
+		private Buffer buffer;
 		public CheckQuerys(Agent agent, MessageTemplate template){
 			super(agent,template);
+			buffer=new Buffer();
 		}
 		
 		private ACLMessage agree(ACLMessage request){
@@ -80,23 +80,26 @@ public class InformationAgent extends Agent{
 			if(request.getPerformative()==ACLMessage.QUERY_REF){
 				if(request.getContent().equals(MessageType.TAG)){
 					mode=TAG_MODE;
-					return agree(request);
+					myAgent.addBehaviour(new TagRetrievingBehaviour(buffer,this));
 				}
 				else{
 					String[] param=request.getContent().split("\\p{Space}+");
 					if(param.length==3 && param[0].equals(MessageType.ANIME)){
-						tag=param[1];
+						String tag=param[1];
+						int count;
 						try{
 							count=Integer.parseInt(param[2]);
 						}catch(NumberFormatException e){
 							throw new NotUnderstoodException("Can't understand message");
 						}
 						mode=ANIME_MODE;
-						return agree(request);
+						myAgent.addBehaviour(new AnimeRetrievingBehaviour(buffer, this, count, tag));
 					}
 					else 
 						throw new NotUnderstoodException("Can't understand message");
-					}
+				}
+				block();
+				return agree(request);
 			}
 			else{
 				throw new RefuseException("Wrong performative");
@@ -116,29 +119,66 @@ public class InformationAgent extends Agent{
 		
 		protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
 			try{
-				if(mode==TAG_MODE){
-					consoleMessage("Searching for tags...");
-					TagDriver tagD= driver.getTagDriver();
-					LinkedList<String> tags=new LinkedList<String>();
-					while(tagD.hasNext())
-						tags.add(tagD.next());
-					consoleMessage("Tags found. Sending tags...");
-					return createReply(request,tags);
-				
-				}else if(mode==ANIME_MODE){
-					consoleMessage("Searching for "+count+" animes of the genre "+tag+"...");
-					AnimeDriver aniD= driver.getAnimeDriver(tag);
-					LinkedList<Anime> animes=new LinkedList<Anime>();
-					while(aniD.hasNext()&& count-->0)
-						animes.add(aniD.next());
-				
-					consoleMessage("Animes found. Sending animes...");
-					return createReply(request,animes);
-				}
-				else
-					throw new FailureException("Error");
+				return createReply(request,buffer.getObject());
 			}catch(Exception e){
 				throw new FailureException(e.getMessage());
+			}
+		}
+		
+		//Tag Retrieving Behaviour
+		class TagRetrievingBehaviour extends Behaviour{
+			Buffer buffer;
+			Behaviour toUnlock;
+			TagDriver tagD;
+			LinkedList<String> tags;
+			public TagRetrievingBehaviour(Buffer buff,Behaviour toUnlock){
+				buffer=buff;
+				this.toUnlock=toUnlock;
+				tagD=driver.getTagDriver();
+				tags=new LinkedList<String>();
+			}
+			public void action(){
+				tags.add(tagD.next());
+			}
+			
+			public boolean done(){
+				return !tagD.hasNext();
+			}
+			
+			public int onEnd(){
+				buffer.setObject(tags);
+				toUnlock.restart();
+				return super.onEnd();
+			}
+		}
+		
+		//Anime Retrieving Behaviour
+		class AnimeRetrievingBehaviour extends Behaviour{
+			Buffer buffer;
+			Behaviour toUnlock;
+			AnimeDriver aniD;
+			int count;
+			LinkedList<Anime> tags;
+			public AnimeRetrievingBehaviour(Buffer buff,Behaviour toUnlock, int count, String tag){
+				buffer=buff;
+				this.toUnlock=toUnlock;
+				aniD=driver.getAnimeDriver(tag);
+				tags=new LinkedList<Anime>();
+				this.count=count;
+			}
+			public void action(){
+				tags.add(aniD.next());
+				count--;
+			}
+			
+			public boolean done(){
+				return !aniD.hasNext() || count<=0;
+			}
+			
+			public int onEnd(){
+				buffer.setObject(tags);
+				toUnlock.restart();
+				return super.onEnd();
 			}
 		}
 	}
