@@ -1,8 +1,9 @@
 package waifu;
 
 import java.util.List;
+import java.io.Serializable;
 
-public class Anime{
+public class Anime implements Serializable{
 	private String name;
 	private String synopsis;
 	private List<String> tags;
@@ -10,7 +11,7 @@ public class Anime{
 	private int duration;
 	private float score;
 	
-	public Anime(String name, String synopsis, List<String> tags, int nChapters, int duration, float score) {
+	public Anime(String name, String synopsis, List<String> tags, int nChapters, int duration, float score){
 		this.name = name;
 		this.synopsis = synopsis;
 		this.tags = tags;
