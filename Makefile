@@ -3,3 +3,10 @@ all:
 	
 clean:
 	rm -r bin/*
+
+runInformationAgentMAL:
+	java -cp lib/jade.jar:bin:lib/jaunt.jar jade.Boot -gui -agents "MALAgent:waifu.agents.InformationAgent(MALDriver)"
+
+runInformationAgentHumming:
+	java -cp lib/jade.jar:bin:lib/jaunt.jar jade.Boot -gui -agents "HummingAgent:waifu.agents.InformationAgent(HummingDriver)"
+
