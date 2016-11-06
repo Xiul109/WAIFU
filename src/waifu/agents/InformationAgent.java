@@ -38,7 +38,8 @@ public class InformationAgent extends Agent{
 			String driverType=getArguments()[0].toString();
 			if(driverType.equals(HUMMING))
 				driver=new HummingDriver();
-			//TO DO: ADD ELSE IF FOR MALDriver
+			else if(driverType.equals(MAL))
+				driver=new MALDriver();
 			else
 				errorM();
 		}
@@ -70,7 +71,7 @@ public class InformationAgent extends Agent{
 		}
 		
 		private ACLMessage agree(ACLMessage request){
-			consoleMessage("Query '"+request.getContent()+"' by "+request.getSender()+" has been accepted");
+			consoleMessage("Query '"+request.getContent()+"' by "+request.getSender()+" has been accepted\n Collecting data...");
 			ACLMessage agree= request.createReply();
 			agree.setPerformative(ACLMessage.AGREE);
 			return agree;
@@ -118,35 +119,50 @@ public class InformationAgent extends Agent{
 		}
 		
 		protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
-			try{
-				return createReply(request,buffer.getObject());
-			}catch(Exception e){
-				throw new FailureException(e.getMessage());
+			if(buffer.getObject()!=null){
+				try{
+					consoleMessage("Sending data...");
+					return createReply(request,buffer.getObject());
+				}catch(Exception e){
+					consoleMessage("An error has ocured sending the data");
+					throw new FailureException(e.getMessage());
+				}
+			}
+			else{
+			consoleMessage("An error has ocured collecting the data");
+				throw new FailureException("There was a problem");
 			}
 		}
 		
 		//Tag Retrieving Behaviour
 		class TagRetrievingBehaviour extends Behaviour{
-			Buffer buffer;
-			Behaviour toUnlock;
-			TagDriver tagD;
-			LinkedList<String> tags;
+			private Buffer buffer;
+			private Behaviour toUnlock;
+			private TagDriver tagD;
+			private LinkedList<String> tags;
+			private boolean failure=false;
+			
 			public TagRetrievingBehaviour(Buffer buff,Behaviour toUnlock){
 				buffer=buff;
 				this.toUnlock=toUnlock;
 				tagD=driver.getTagDriver();
 				tags=new LinkedList<String>();
+				if(tagD==null){
+					failure=true;
+				}
 			}
 			public void action(){
-				tags.add(tagD.next());
+				if(!failure)
+					tags.add(tagD.next());
 			}
 			
 			public boolean done(){
-				return !tagD.hasNext();
+				return failure || !tagD.hasNext();
 			}
 			
 			public int onEnd(){
-				buffer.setObject(tags);
+				if(!failure) buffer.setObject(tags);
+				else  buffer.setObject(null);
 				toUnlock.restart();
 				return super.onEnd();
 			}
@@ -154,29 +170,37 @@ public class InformationAgent extends Agent{
 		
 		//Anime Retrieving Behaviour
 		class AnimeRetrievingBehaviour extends Behaviour{
-			Buffer buffer;
-			Behaviour toUnlock;
-			AnimeDriver aniD;
-			int count;
-			LinkedList<Anime> tags;
+			private Buffer buffer;
+			private Behaviour toUnlock;
+			private AnimeDriver aniD;
+			private int count;
+			private LinkedList<Anime> animes;
+			private boolean failure=false;
+			
 			public AnimeRetrievingBehaviour(Buffer buff,Behaviour toUnlock, int count, String tag){
 				buffer=buff;
 				this.toUnlock=toUnlock;
 				aniD=driver.getAnimeDriver(tag);
-				tags=new LinkedList<Anime>();
+				animes=new LinkedList<Anime>();
 				this.count=count;
+				if(aniD==null){
+					failure=true;
+				}
 			}
 			public void action(){
-				tags.add(aniD.next());
-				count--;
+				if(!failure){
+					animes.add(aniD.next());
+					count--;
+				}
 			}
 			
 			public boolean done(){
-				return !aniD.hasNext() || count<=0;
+				return  failure || !aniD.hasNext() || count<=0;
 			}
 			
 			public int onEnd(){
-				buffer.setObject(tags);
+				if(!failure) buffer.setObject(animes);
+				else buffer.setObject(null);
 				toUnlock.restart();
 				return super.onEnd();
 			}
