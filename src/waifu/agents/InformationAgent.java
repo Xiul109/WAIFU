@@ -18,7 +18,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 
 public class InformationAgent extends Agent{
-	private final String HUMMING="HummingDriver";
+	private final String AP="APDriver";
 	private final String MAL="MALDriver";
 	
 	private Driver driver;
@@ -36,8 +36,8 @@ public class InformationAgent extends Agent{
 	private void argComprobations(){
 		if(getArguments()!=null && getArguments().length==1){
 			String driverType=getArguments()[0].toString();
-			if(driverType.equals(HUMMING))
-				driver=new HummingDriver();
+			if(driverType.equals(AP))
+				driver=new APDriver();
 			else if(driverType.equals(MAL))
 				driver=new MALDriver();
 			else
@@ -57,7 +57,7 @@ public class InformationAgent extends Agent{
 	}
 	
 	protected void takeDown(){
-		consoleMessage(error?"Wrong arguments: The Agent takes only 1 argument and it must be '"+HUMMING+"' or '"+MAL+"'.":"Agent deleted");
+		consoleMessage(error?"Wrong arguments: The Agent takes only 1 argument and it must be '"+AP+"' or '"+MAL+"'.":"Agent deleted");
 	}
 	
 	//Comunication Behaviour
@@ -78,6 +78,7 @@ public class InformationAgent extends Agent{
 		}
 		
 		protected ACLMessage handleRequest(ACLMessage request) throws NotUnderstoodException, RefuseException{
+			consoleMessage("Got a message from "+request.getSender());
 			if(request.getPerformative()==ACLMessage.QUERY_REF){
 				if(request.getContent().equals(MessageType.TAG)){
 					mode=TAG_MODE;
@@ -109,7 +110,7 @@ public class InformationAgent extends Agent{
 		
 		private ACLMessage createReply(ACLMessage request, Serializable object) throws FailureException{
 			ACLMessage reply= request.createReply();
-			reply.setPerformative(ACLMessage.INFORM_REF);
+			reply.setPerformative(ACLMessage.INFORM);
 			try{
 				reply.setContentObject(object);
 			}catch(Exception e){
@@ -124,12 +125,12 @@ public class InformationAgent extends Agent{
 					consoleMessage("Sending data...");
 					return createReply(request,buffer.getObject());
 				}catch(Exception e){
-					consoleMessage("An error has ocured sending the data");
+					consoleMessage("An error has occured sending the data");
 					throw new FailureException(e.getMessage());
 				}
 			}
 			else{
-			consoleMessage("An error has ocured collecting the data");
+			consoleMessage("An error has occured collecting the data");
 				throw new FailureException("There was a problem");
 			}
 		}
