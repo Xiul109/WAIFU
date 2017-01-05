@@ -7,6 +7,8 @@ clean:
 runInformationAgentMAL:
 	java -cp lib/jade.jar:bin:lib/jaunt.jar jade.Boot -gui -agents "MALAgent:waifu.agents.InformationAgent(MALDriver)"
 
-runInformationAgentHumming:
-	java -cp lib/jade.jar:bin:lib/jaunt.jar jade.Boot -gui -agents "HummingAgent:waifu.agents.InformationAgent(HummingDriver)"
+runInformationAgentAP:
+	java -cp lib/jade.jar:bin:lib/jaunt.jar jade.Boot -gui -agents "APAgent:waifu.agents.InformationAgent(APDriver)"
 
+runTestMainAgent:
+	java -cp lib/jade.jar:bin:lib/jaunt.jar jade.Boot -gui -agents "APAgent:waifu.agents.InformationAgent(APDriver);MainAgent:waifu.agents.MainAgent(APAgent)"
