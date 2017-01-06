@@ -9,26 +9,24 @@ import com.jaunt.UserAgent;
 
 import waifu.drivers.TagDriver;
 
-public class HummingTagDriver implements TagDriver{
+public class APTagDriver implements TagDriver{
 	private UserAgent ua;
 	private List<Element> tagGroup;
 	int i=1;
 
-	public HummingTagDriver(String url) throws ResponseException, NotFound {
+	public APTagDriver(String url) throws ResponseException, NotFound {
 		ua=new UserAgent();
 		ua.visit(url);
-		Element el= ua.doc.findFirst("<div class=\"large-12 columns filter-section no-padding\">").getChildElements().get(0);;
-		tagGroup=el.getChildElements();
+		tagGroup= ua.doc.findFirst("<div id=\"multipletags\">").getChildElements().get(0).getChildElements();
 	}
 	
 	public String next(){
 		if(i>=tagGroup.size()) return null;
 		Element e=tagGroup.get(i);
 		i++;
-		return e.getChildElements().get(0).getChildElements().get(0).getAtString("value");
+		return e.getChildElements().get(1).innerText();
 	}
 	public boolean hasNext(){
-		if(i>=tagGroup.size()) return false;
-		return true;
+		return i<tagGroup.size();
 	}
 }
