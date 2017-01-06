@@ -23,7 +23,6 @@ public class MainAgent extends Agent implements Controller{
 		else
 			errorM();
 		view=new MainGUI(this);
-		askAnimes("drama",3);
 	}
 	
 	public void askTags(){
@@ -72,12 +71,15 @@ public class MainAgent extends Agent implements Controller{
 			}
 		}
 		protected void handleRefuse(ACLMessage refuse){
+			view.notifyError("The AggregatorAgent has rejected");
 			consoleMessage("The AggregatorAgent has rejected");
 		}
 		protected void handleNotUnderstood(ACLMessage nu){
+			view.notifyError("The AggregatorAgent doesn't understand the message");
 			consoleMessage("The AggregatorAgent doesn't understand the message");
 		}
 		protected void handleFailure(ACLMessage failure){
+			view.notifyError("The AggregatorAgent had a problem collecting the data");
 			consoleMessage("The AggregatorAgent had a problem collecting the data");
 		}
 	}
@@ -94,19 +96,21 @@ public class MainAgent extends Agent implements Controller{
 			consoleMessage("The message from AggregatorAgent has arrived");
 			try{
 				List<Anime> animes=(List<Anime>) inform.getContentObject();
-				System.out.println(animes);
 				view.giveAnimes(animes);
 			}catch(UnreadableException e){
 				consoleMessage(e.getMessage());
 			}
 		}
 		protected void handleRefuse(ACLMessage refuse){
+			view.notifyError("The AggregatorAgent doesn't understand the message");
 			consoleMessage("The AggregatorAgent has rejected");
 		}
 		protected void handleNotUnderstood(ACLMessage nu){
+			view.notifyError("The AggregatorAgent doesn't understand the message");
 			consoleMessage("The AggregatorAgent doesn't understand the message");
 		}
 		protected void handleFailure(ACLMessage failure){
+			view.notifyError("The AggregatorAgent had a problem collecting the data");
 			consoleMessage("The AggregatorAgent had a problem collecting the data");
 		}
 	}

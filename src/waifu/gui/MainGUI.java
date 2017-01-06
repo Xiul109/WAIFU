@@ -219,6 +219,7 @@ public class MainGUI extends JFrame implements View {
 		lstAnime.addMouseListener(new LstAnimeMouseListener());
 		lstAnime.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		scrollAnime.setViewportView(lstAnime);
+		setVisible(true);
 		/*Conseguir tags*/
 		waitTags();
 	}
@@ -237,11 +238,15 @@ public class MainGUI extends JFrame implements View {
 	public void giveAnimes(List<Anime> animes) {
 		lstAnime.setListData(new Vector<Anime>(animes));
 	}
+	
+	public void notifyError(String error){
+		
+	}
 
 	private class BtnBuscarActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			String tag = (String) cbCategoriaAnime.getSelectedItem();
-			controller.askAnimes(tag);
+			controller.askAnimes(tag,10);
 		}
 	}
 	private class LstAnimeMouseListener extends MouseAdapter {
