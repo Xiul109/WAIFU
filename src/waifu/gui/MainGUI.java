@@ -48,6 +48,7 @@ public class MainGUI extends JFrame implements View {
 	private JSpinner spinSabado;
 	private JSpinner spinDomingo;
 	private JList<Anime> lstAnime;
+	private JButton btnBuscar;
 
 	public MainGUI(Controller controller) {
 		/*Controller*/
@@ -88,7 +89,7 @@ public class MainGUI extends JFrame implements View {
 		pnlLunes.add(lblLunes, BorderLayout.NORTH);
 		
 		spinLunes = new JSpinner();
-		spinLunes.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		spinLunes.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		spinLunes.setName("");
 		pnlLunes.add(spinLunes, BorderLayout.SOUTH);
 		
@@ -106,7 +107,7 @@ public class MainGUI extends JFrame implements View {
 		pnlMartes.add(lblMartes, BorderLayout.WEST);
 		
 		spinMartes = new JSpinner();
-		spinMartes.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		spinMartes.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlMartes.add(spinMartes, BorderLayout.SOUTH);
 		
 		JPanel pnlMiercoles = new JPanel();
@@ -123,7 +124,7 @@ public class MainGUI extends JFrame implements View {
 		pnlMiercoles.add(lblMircoles, BorderLayout.WEST);
 		
 		spinMiercoles = new JSpinner();
-		spinMiercoles.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		spinMiercoles.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlMiercoles.add(spinMiercoles, BorderLayout.SOUTH);
 		
 		JPanel pnlJueves = new JPanel();
@@ -140,7 +141,7 @@ public class MainGUI extends JFrame implements View {
 		pnlJueves.add(lblJueves, BorderLayout.WEST);
 		
 		spinJueves = new JSpinner();
-		spinJueves.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		spinJueves.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlJueves.add(spinJueves, BorderLayout.SOUTH);
 		
 		JPanel pnlViernes = new JPanel();
@@ -157,7 +158,7 @@ public class MainGUI extends JFrame implements View {
 		pnlViernes.add(lblViernes, BorderLayout.WEST);
 		
 		spinViernes = new JSpinner();
-		spinViernes.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		spinViernes.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlViernes.add(spinViernes, BorderLayout.SOUTH);
 		
 		JPanel pnlSabado = new JPanel();
@@ -174,7 +175,7 @@ public class MainGUI extends JFrame implements View {
 		pnlSabado.add(lblSbado, BorderLayout.WEST);
 		
 		spinSabado = new JSpinner();
-		spinSabado.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		spinSabado.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlSabado.add(spinSabado, BorderLayout.SOUTH);
 		
 		JPanel pnlDomingo = new JPanel();
@@ -191,7 +192,7 @@ public class MainGUI extends JFrame implements View {
 		pnlDomingo.add(lblDomingo, BorderLayout.WEST);
 		
 		spinDomingo = new JSpinner();
-		spinDomingo.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		spinDomingo.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlDomingo.add(spinDomingo, BorderLayout.SOUTH);
 		
 		JPanel pnlTags = new JPanel();
@@ -206,7 +207,8 @@ public class MainGUI extends JFrame implements View {
 		contentPane.add(pnlButtons, BorderLayout.SOUTH);
 		pnlButtons.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar = new JButton("Buscar");
+		btnBuscar.setEnabled(false);
 		btnBuscar.addActionListener(new BtnBuscarActionListener());
 		pnlButtons.add(btnBuscar, BorderLayout.CENTER);
 		
@@ -232,7 +234,7 @@ public class MainGUI extends JFrame implements View {
 		for (String tag : tags)
 			cbCategoriaAnime.addItem(tag);
 		cbCategoriaAnime.setSelectedIndex(0);
-		
+		btnBuscar.setEnabled(true);
 	}
 
 	public void giveAnimes(List<Anime> animes) {
@@ -240,7 +242,14 @@ public class MainGUI extends JFrame implements View {
 	}
 	
 	public void notifyError(String error){
-		
+		String [] opciones = {"Salir","Reintentar"};
+		if (JOptionPane.showOptionDialog(this, error, "Error", JOptionPane.ERROR_MESSAGE, JOptionPane.YES_NO_OPTION, null, opciones,opciones[0])==0) {
+			setVisible(false);
+			dispose();
+			System.exit(0);
+		}else{
+			//TO-DO
+		}
 	}
 
 	private class BtnBuscarActionListener implements ActionListener {
