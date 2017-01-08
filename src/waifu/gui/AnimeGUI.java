@@ -19,14 +19,23 @@ import java.awt.Component;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import waifu.Anime;
+import waifu.Week;
 
 public class AnimeGUI extends JFrame {
 
 	private JPanel contentPane;
-
-	public AnimeGUI(Anime anime) {
+	private Controller controller;
+	private Week tiempoLibre;
+	private Anime anime;
+	public AnimeGUI(Anime anime, Week tiempoLibre, Controller controller) {
+		this.anime=anime;
+		this.tiempoLibre=tiempoLibre;
+		this.controller=controller;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -55,9 +64,9 @@ public class AnimeGUI extends JFrame {
 		contentPane.add(pnlInfo, BorderLayout.SOUTH);
 		GridBagLayout gbl_pnlInfo = new GridBagLayout();
 		gbl_pnlInfo.columnWidths = new int[]{15, 0, 0, 0, 15, 0};
-		gbl_pnlInfo.rowHeights = new int[]{15, 0, 15, 0};
+		gbl_pnlInfo.rowHeights = new int[]{15, 0, 0, 15, 0};
 		gbl_pnlInfo.columnWeights = new double[]{1.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_pnlInfo.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_pnlInfo.rowWeights = new double[]{0.0, 1.0, 0.0, 1.0, Double.MIN_VALUE};
 		pnlInfo.setLayout(gbl_pnlInfo);
 		
 		JPanel pnlEp = new JPanel();
@@ -118,8 +127,25 @@ public class AnimeGUI extends JFrame {
 		JLabel lblScore = new JLabel(anime.getScore()+"");
 		lblScore.setHorizontalAlignment(SwingConstants.CENTER);
 		pnlPuntuacion.add(lblScore, BorderLayout.CENTER);
+		
+		JButton btnVerAnime = new JButton("Ver Anime");
+		btnVerAnime.addActionListener(new BtnVerAnimeActionListener());
+		GridBagConstraints gbc_btnVerAnime = new GridBagConstraints();
+		gbc_btnVerAnime.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnVerAnime.gridwidth = 5;
+		gbc_btnVerAnime.insets = new Insets(0, 0, 0, 5);
+		gbc_btnVerAnime.gridx = 0;
+		gbc_btnVerAnime.gridy = 3;
+		pnlInfo.add(btnVerAnime, gbc_btnVerAnime);
 		for (String textTag : anime.getTags()){
 			pnlTags.add(new JLabel("["+textTag+"]"));
+		}
+	}
+	private class BtnVerAnimeActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			controller.askSchedule(tiempoLibre, anime);
+			setVisible(false);
+			dispose();
 		}
 	}
 }
