@@ -49,7 +49,7 @@ public class MainAgent extends Agent implements Controller{
 			message.setProtocol(FIPANames.InteractionProtocol.FIPA_QUERY);
 			addBehaviour(new QuerySchedule(this,message));
 		}catch(Exception e){
-			notifyError(e.getMessage());
+			view.notifyError(e.getMessage());
 		}
 	}
 	
@@ -129,7 +129,7 @@ public class MainAgent extends Agent implements Controller{
 	}
 	
 	class QuerySchedule extends AchieveREInitiator{
-		public QuerySchedule(){
+		public QuerySchedule(Agent agent,ACLMessage message){
 			super(agent,message);
 			consoleMessage("Asking SchedulerAgent for schedule");
 		}

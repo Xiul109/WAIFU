@@ -1,6 +1,6 @@
 package waifu;
 
-
+import java.io.Serializable;
 
 public class Week implements Serializable{
 	private int[] week;

@@ -1,5 +1,6 @@
 package waifu;
 
+import java.io.Serializable;
 
 public class ToSchedule implements Serializable{
 	private Week freeTime;
