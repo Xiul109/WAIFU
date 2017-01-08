@@ -1,5 +1,5 @@
 all:
-	javac -cp lib/jade.jar:lib/jaunt.jar src/waifu/Anime.java src/waifu/drivers/* src/waifu/agents/* src/waifu/gui/* -d bin/
+	javac -cp lib/jade.jar:lib/jaunt.jar src/waifu/*.java src/waifu/drivers/* src/waifu/agents/* src/waifu/gui/* -d bin/
 	
 clean:
 	rm -r bin/*
