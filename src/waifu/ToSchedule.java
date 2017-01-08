@@ -1,6 +1,7 @@
 package waifu;
 
-public class ToSchedule{
+
+public class ToSchedule implements Serializable{
 	private Week freeTime;
 	private Anime anime;
 	

@@ -1,7 +1,8 @@
 package waifu;
 
 
-public class Week{
+
+public class Week implements Serializable{
 	private int[] week;
 	public static final int MONDAY=0;
 	public static final int TUESDAY=1;
@@ -10,7 +11,7 @@ public class Week{
 	public static final int FRIDAY=4;
 	public static final int SATURDAY=5;
 	public static final int SUNDAY=6;
-	public static final int[] DAYS={MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY};
+	public static final int[] DAYS={MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY ,SATURDAY ,SUNDAY};
 	public Week(){
 		week=new int[7];
 	}
