@@ -11,5 +11,5 @@ public class ToSchedule{
 	
 	public Week getFreeTime(){return freeTime;}
 	
-	public Anime getAnime(){return Anime;}
+	public Anime getAnime(){return anime;}
 }
