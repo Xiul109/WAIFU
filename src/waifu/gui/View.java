@@ -2,6 +2,7 @@ package waifu.gui;
 
 import java.util.List;
 import waifu.Anime;
+import waifu.Week;
 
 public interface View{
 	public void giveTags(List<String> tags);

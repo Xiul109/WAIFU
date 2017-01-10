@@ -1,7 +1,6 @@
 package waifu.gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -33,6 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import waifu.Anime;
+import waifu.Week;
 
 public class MainGUI extends JFrame implements View {
 
@@ -40,14 +40,11 @@ public class MainGUI extends JFrame implements View {
 	private Controller controller;
 	
 	private JComboBox<String> cbCategoriaAnime;
-	private JSpinner spinLunes;
-	private JSpinner spinMartes;
-	private JSpinner spinMiercoles;
-	private JSpinner spinJueves;
-	private JSpinner spinViernes;
-	private JSpinner spinSabado;
-	private JSpinner spinDomingo;
 	private JList<Anime> lstAnime;
+	private JButton btnBuscar;
+	private JSpinner[] spinners=new JSpinner[7];
+	private Week tiempoLibre;
+	private Anime ani;
 
 	public MainGUI(Controller controller) {
 		/*Controller*/
@@ -87,10 +84,10 @@ public class MainGUI extends JFrame implements View {
 		lblLunes.setAlignmentX(Component.CENTER_ALIGNMENT);
 		pnlLunes.add(lblLunes, BorderLayout.NORTH);
 		
-		spinLunes = new JSpinner();
-		spinLunes.setModel(new SpinnerNumberModel(0, null, 1440, 1));
-		spinLunes.setName("");
+		JSpinner spinLunes = new JSpinner();
+		spinLunes.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlLunes.add(spinLunes, BorderLayout.SOUTH);
+		spinners[Week.MONDAY]=spinLunes;
 		
 		JPanel pnlMartes = new JPanel();
 		pnlMartes.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -105,9 +102,10 @@ public class MainGUI extends JFrame implements View {
 		JLabel lblMartes = new JLabel("Martes");
 		pnlMartes.add(lblMartes, BorderLayout.WEST);
 		
-		spinMartes = new JSpinner();
-		spinMartes.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		JSpinner spinMartes = new JSpinner();
+		spinMartes.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlMartes.add(spinMartes, BorderLayout.SOUTH);
+		spinners[Week.TUESDAY]=spinMartes;
 		
 		JPanel pnlMiercoles = new JPanel();
 		pnlMiercoles.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -122,9 +120,10 @@ public class MainGUI extends JFrame implements View {
 		JLabel lblMircoles = new JLabel("Miércoles");
 		pnlMiercoles.add(lblMircoles, BorderLayout.WEST);
 		
-		spinMiercoles = new JSpinner();
-		spinMiercoles.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		JSpinner spinMiercoles = new JSpinner();
+		spinMiercoles.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlMiercoles.add(spinMiercoles, BorderLayout.SOUTH);
+		spinners[Week.WEDNESDAY]=spinMiercoles;
 		
 		JPanel pnlJueves = new JPanel();
 		pnlJueves.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -139,9 +138,10 @@ public class MainGUI extends JFrame implements View {
 		JLabel lblJueves = new JLabel("Jueves");
 		pnlJueves.add(lblJueves, BorderLayout.WEST);
 		
-		spinJueves = new JSpinner();
-		spinJueves.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		JSpinner spinJueves = new JSpinner();
+		spinJueves.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlJueves.add(spinJueves, BorderLayout.SOUTH);
+		spinners[Week.THURSDAY]=spinJueves;
 		
 		JPanel pnlViernes = new JPanel();
 		pnlViernes.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -156,9 +156,10 @@ public class MainGUI extends JFrame implements View {
 		JLabel lblViernes = new JLabel("Viernes");
 		pnlViernes.add(lblViernes, BorderLayout.WEST);
 		
-		spinViernes = new JSpinner();
-		spinViernes.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		JSpinner spinViernes = new JSpinner();
+		spinViernes.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlViernes.add(spinViernes, BorderLayout.SOUTH);
+		spinners[Week.FRIDAY]=spinViernes;
 		
 		JPanel pnlSabado = new JPanel();
 		pnlSabado.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -173,9 +174,10 @@ public class MainGUI extends JFrame implements View {
 		JLabel lblSbado = new JLabel("Sábado");
 		pnlSabado.add(lblSbado, BorderLayout.WEST);
 		
-		spinSabado = new JSpinner();
-		spinSabado.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		JSpinner spinSabado = new JSpinner();
+		spinSabado.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlSabado.add(spinSabado, BorderLayout.SOUTH);
+		spinners[Week.SATURDAY]=spinSabado;
 		
 		JPanel pnlDomingo = new JPanel();
 		pnlDomingo.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
@@ -190,9 +192,10 @@ public class MainGUI extends JFrame implements View {
 		JLabel lblDomingo = new JLabel("Domingo");
 		pnlDomingo.add(lblDomingo, BorderLayout.WEST);
 		
-		spinDomingo = new JSpinner();
-		spinDomingo.setModel(new SpinnerNumberModel(0, null, 1440, 1));
+		JSpinner spinDomingo = new JSpinner();
+		spinDomingo.setModel(new SpinnerNumberModel(0, 0, 1440, 1));
 		pnlDomingo.add(spinDomingo, BorderLayout.SOUTH);
+		spinners[Week.SUNDAY]=spinDomingo;
 		
 		JPanel pnlTags = new JPanel();
 		pnlTags.setBorder(new TitledBorder(null, "Categoría anime", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -206,7 +209,8 @@ public class MainGUI extends JFrame implements View {
 		contentPane.add(pnlButtons, BorderLayout.SOUTH);
 		pnlButtons.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnBuscar = new JButton("Buscar");
+		btnBuscar = new JButton("Buscar");
+		btnBuscar.setEnabled(false);
 		btnBuscar.addActionListener(new BtnBuscarActionListener());
 		pnlButtons.add(btnBuscar, BorderLayout.CENTER);
 		
@@ -232,7 +236,7 @@ public class MainGUI extends JFrame implements View {
 		for (String tag : tags)
 			cbCategoriaAnime.addItem(tag);
 		cbCategoriaAnime.setSelectedIndex(0);
-		
+		btnBuscar.setEnabled(true);
 	}
 
 	public void giveAnimes(List<Anime> animes) {
@@ -240,7 +244,16 @@ public class MainGUI extends JFrame implements View {
 	}
 	
 	public void notifyError(String error){
+		JOptionPane.showMessageDialog(this, error);
+		setVisible(false);
+		dispose();
+		System.exit(0);
 		
+	}
+
+	public void giveSchedule(Week week) {
+		ScheduleGUI horario=new ScheduleGUI(ani, week);
+		horario.setVisible(true);
 	}
 
 	private class BtnBuscarActionListener implements ActionListener {
@@ -252,7 +265,11 @@ public class MainGUI extends JFrame implements View {
 	private class LstAnimeMouseListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent arg0) {
 			if (arg0.getClickCount() == 2) {
-				AnimeGUI anime = new AnimeGUI(lstAnime.getSelectedValue());
+				ani=lstAnime.getSelectedValue();
+				tiempoLibre=new Week();
+				for (int dia : Week.DAYS)
+					tiempoLibre.setDay(dia, (int) (spinners[dia].getModel().getValue()));
+				AnimeGUI anime = new AnimeGUI(ani,tiempoLibre,controller);
 				anime.setVisible(true);
 			}
 		}
