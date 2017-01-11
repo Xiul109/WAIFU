@@ -5,7 +5,9 @@ import java.io.Serializable;
 class Buffer{
 	Serializable object=null;
 	public Serializable getObject(){
-		return object;
+		Serializable aux=object;
+		object=null;
+		return aux;
 	}
 	
 	public void setObject(Serializable object){

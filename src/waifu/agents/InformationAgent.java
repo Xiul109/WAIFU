@@ -85,8 +85,10 @@ public class InformationAgent extends Agent{
 					myAgent.addBehaviour(new TagRetrievingBehaviour(buffer,this));
 				}
 				else{
-					String[] param=request.getContent().split("\\p{Space}+");
-					if(param.length==3 && param[0].equals(MessageType.ANIME)){
+					String[] param=request.getContent().split(",");
+					consoleMessage("param: "+param.length+"msstype:"+param[0]);
+					consoleMessage(param[0]);
+					if( param[0].equals(MessageType.ANIME)){
 						String tag=param[1];
 						int count;
 						try{
@@ -120,10 +122,12 @@ public class InformationAgent extends Agent{
 		}
 		
 		protected ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) throws FailureException{
-			if(buffer.getObject()!=null){
+			Serializable  object;
+
+			if((object=buffer.getObject())!=null){
 				try{
 					consoleMessage("Sending data...");
-					return createReply(request,buffer.getObject());
+					return createReply(request,object);
 				}catch(Exception e){
 					consoleMessage("An error has occured sending the data");
 					throw new FailureException(e.getMessage());

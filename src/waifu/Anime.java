@@ -46,5 +46,20 @@ public class Anime implements Serializable{
 		return "Anime [name=" + name + ", synopsis=" + synopsis + ", tags=" + tags + ", nChapters=" + nChapters
 				+ ", duration=" + duration + ", score=" + score + "]";
 	}
+	public Anime combine(Anime other){
+		
+		synopsis=other.getSynopsis().length()<this.synopsis.length() ? this.synopsis :  other.getSynopsis();
+		for(String tag:other.getTags()){
+			if(! tags.contains(tag)) tags.add(tag);
+		}
+
+		return new Anime(other.getName(),synopsis,this.tags,other.getNChapters(),other.getDuration(),(other.getScore()+this.score)/2);
+	}
+	public boolean equals(Object other){
+			return other instanceof Anime ? name.equalsIgnoreCase(((Anime) other).getName()) : false;
+	}
 }
+
+
+
 

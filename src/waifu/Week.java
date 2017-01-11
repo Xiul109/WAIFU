@@ -27,4 +27,14 @@ public class Week implements Serializable{
 	public void setDay(int day,int value){week[day]=value;}
 	
 	public int getDay(int day){return week[day];}
+
+	public String toString(){
+		String retorno=null;
+		for(Integer day:week){
+			retorno+=" "+day;
+		}
+		retorno+="\n";
+		return retorno;
+
+	}
 }

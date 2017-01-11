@@ -12,3 +12,6 @@ runInformationAgentAP:
 
 runTestMainAgent:
 	java -cp lib/jade.jar:bin:lib/jaunt.jar jade.Boot -gui -agents "APAgent:waifu.agents.InformationAgent(APDriver);MainAgent:waifu.agents.MainAgent(APAgent)"
+
+runTest:
+	java -cp lib/jade.jar:bin:lib/jaunt.jar jade.Boot -gui -agents "APAgent:waifu.agents.InformationAgent(APDriver);MALAgent:waifu.agents.InformationAgent(MALDriver);AggregatorAgent:waifu.agents.AggregatorAgent(APAgent,MALAgent);SchedulerAgent:waifu.agents.Scheduler;MainAgent:waifu.agents.MainAgent(AggregatorAgent,SchedulerAgent)"

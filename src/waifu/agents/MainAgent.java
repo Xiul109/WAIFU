@@ -36,7 +36,7 @@ public class MainAgent extends Agent implements Controller{
 	public void askAnimes(String tag,int number){
 		ACLMessage message=new ACLMessage(ACLMessage.QUERY_REF);
 		message.addReceiver(aggregator);
-		message.setContent(MessageType.ANIME+" "+tag+" "+number);
+		message.setContent(MessageType.ANIME+","+tag+","+number);
 		message.setProtocol(FIPANames.InteractionProtocol.FIPA_QUERY);
 		addBehaviour(new QueryAnimes(this,message));
 	}
@@ -78,6 +78,7 @@ public class MainAgent extends Agent implements Controller{
 			consoleMessage("The message from AggregatorAgent has arrived");
 			try{
 				List<String> tags=(List<String>) inform.getContentObject();
+				consoleMessage("recibidos: "+tags.size()+" tags");
 				view.giveTags(tags);
 			}catch(UnreadableException e){
 				consoleMessage(e.getMessage());
