@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 
 import java.util.List;
 import java.util.Vector;
+import java.util.Collections;
 import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
@@ -54,7 +55,7 @@ public class MainGUI extends JFrame implements View {
 		/*Controller*/
 		this.controller=controller;
 		/*Opciones JPanel*/
-		setResizable(false);
+//		setResizable(true);
 		setMinimumSize(new Dimension(500, 300));
 		setTitle("WAIFU");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -237,6 +238,7 @@ public class MainGUI extends JFrame implements View {
 	}
 	
 	public void giveTags(List<String> tags) {
+		Collections.sort(tags);
 		for (String tag : tags)
 			cbCategoriaAnime.addItem(tag);
 		cbCategoriaAnime.setSelectedIndex(0);
@@ -244,17 +246,12 @@ public class MainGUI extends JFrame implements View {
 	}
 
 	public void giveAnimes(List<Anime> animes) {
-		DefaultListModel<Anime> listModel = (DefaultListModel<Anime>) lstAnime.getModel();
-        listModel.removeAllElements();
 		lstAnime.setListData(new Vector<Anime>(animes));
 	}
 	
 	public void notifyError(String error){
 		JOptionPane.showMessageDialog(this, error);
-		setVisible(false);
-		dispose();
-		System.exit(0);
-		
+		controller.askClose();
 	}
 
 	public void giveSchedule(Week week) {
@@ -262,11 +259,7 @@ public class MainGUI extends JFrame implements View {
 		horario.setVisible(true);
 	}
 
-	public void closeWAIFU() {
-		setVisible(false);
-		dispose();
-		System.exit(0);
-	}
+	public void closeWAIFU() {}
 	
 	private class BtnBuscarActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
