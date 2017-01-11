@@ -15,6 +15,7 @@ import java.awt.Color;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.BevelBorder;
 import javax.swing.JComboBox;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.Component;
 import javax.swing.UIManager;
@@ -33,6 +34,8 @@ import java.awt.event.MouseEvent;
 
 import waifu.Anime;
 import waifu.Week;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainGUI extends JFrame implements View {
 
@@ -47,6 +50,7 @@ public class MainGUI extends JFrame implements View {
 	private Anime ani;
 
 	public MainGUI(Controller controller) {
+		addWindowListener(new ThisWindowListener());
 		/*Controller*/
 		this.controller=controller;
 		/*Opciones JPanel*/
@@ -240,6 +244,8 @@ public class MainGUI extends JFrame implements View {
 	}
 
 	public void giveAnimes(List<Anime> animes) {
+		DefaultListModel<Anime> listModel = (DefaultListModel<Anime>) lstAnime.getModel();
+        listModel.removeAllElements();
 		lstAnime.setListData(new Vector<Anime>(animes));
 	}
 	
@@ -256,6 +262,12 @@ public class MainGUI extends JFrame implements View {
 		horario.setVisible(true);
 	}
 
+	public void closeWAIFU() {
+		setVisible(false);
+		dispose();
+		System.exit(0);
+	}
+	
 	private class BtnBuscarActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			String tag = (String) cbCategoriaAnime.getSelectedItem();
@@ -272,6 +284,11 @@ public class MainGUI extends JFrame implements View {
 				AnimeGUI anime = new AnimeGUI(ani,tiempoLibre,controller);
 				anime.setVisible(true);
 			}
+		}
+	}
+	private class ThisWindowListener extends WindowAdapter {
+		public void windowClosing(WindowEvent arg0) {
+			controller.askClose();
 		}
 	}
 }

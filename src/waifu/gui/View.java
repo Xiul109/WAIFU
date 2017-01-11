@@ -9,4 +9,5 @@ public interface View{
 	public void giveAnimes(List<Anime> animes);
 	public void notifyError(String error);
 	public void giveSchedule(Week week);
+	public void closeWAIFU();
 }
