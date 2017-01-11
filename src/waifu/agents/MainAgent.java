@@ -54,7 +54,12 @@ public class MainAgent extends Agent implements Controller{
 	}
 	
 	protected void takeDown(){
+		view.closeWAIFU();
 		consoleMessage(error?"Wrong arguments: The Agent takes only 1 argument and it must be the name of the AggregatorAgent":"Agent deleted");
+	}
+	
+	public void askClose(){
+		doDelete();
 	}
 	
 	private void errorM(){

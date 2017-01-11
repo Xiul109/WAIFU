@@ -204,7 +204,7 @@ public class InformationAgent extends Agent{
 			}
 			
 			public int onEnd(){
-				if(!failure) buffer.setObject(animes);
+				if(!failure && !animes.isEmpty()) buffer.setObject(animes);
 				else buffer.setObject(null);
 				toUnlock.restart();
 				return super.onEnd();
