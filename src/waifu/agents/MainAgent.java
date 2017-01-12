@@ -54,7 +54,7 @@ public class MainAgent extends Agent implements Controller{
 	}
 	
 	protected void takeDown(){
-		consoleMessage(error?"Wrong arguments: The Agent takes only 1 argument and it must be the name of the AggregatorAgent":"Agent deleted");
+		consoleMessage(error?"Wrong arguments: The Agent takes only 2 argument and they must be the name of the AggregatorAgent and the SchedulerAgent":"Agent deleted");
 	}
 	
 	public void askClose(){
