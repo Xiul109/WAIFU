@@ -55,7 +55,6 @@ public class MainGUI extends JFrame implements View {
 		/*Controller*/
 		this.controller=controller;
 		/*Opciones JPanel*/
-//		setResizable(true);
 		setMinimumSize(new Dimension(500, 300));
 		setTitle("WAIFU");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -259,8 +258,6 @@ public class MainGUI extends JFrame implements View {
 		horario.setVisible(true);
 	}
 
-	public void closeWAIFU() {}
-	
 	private class BtnBuscarActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent arg0) {
 			String tag = (String) cbCategoriaAnime.getSelectedItem();

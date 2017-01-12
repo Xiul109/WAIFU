@@ -50,6 +50,7 @@ public class AggregatorAgent extends Agent{
 	}
 
 	public synchronized void addAnime(LinkedList<Anime> otherAnimes){
+		this.animes=new LinkedList<Anime>();
 		for(Anime anime:otherAnimes){
 			if(!this.animes.contains(anime)){
 				this.animes.add(anime);
